@@ -1,5 +1,6 @@
 pipeline {
     agent any
+        stages {
          stage('Login and Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jenac', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -10,7 +11,6 @@ pipeline {
                 }
             }
         }
-    stages {
         stage('file creation and version') {
     agent {
         docker {
