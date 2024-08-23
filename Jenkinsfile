@@ -5,6 +5,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     script {
+                        sh 'docker --version' // Verify Docker is available
                         sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
                     }
                 }
