@@ -1,12 +1,28 @@
 pipeline {
     agent any
     stages {
-        stage('Login and Deploy') {
+        stage('DockerHub Login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jenac', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    script {
+                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                    }
+                }
+            }
+        }
+
+        stage('Node Version and File Creation') {
+            agent {
+                docker {
+                    image 'node:18'
+                }
+            }
+            steps {
+                script {
                     sh '''
-                        echo "Logging in with user: $USERNAME"
-                        curl -u $USERNAME:$PASSWORD https://example.com/login
+                    node -v
+                    echo "Rafeek Zakaria" > /workspace/myname.txt
+                    archiveArtifacts artifacts: 'myname.txt'
                     '''
                 }
             }
