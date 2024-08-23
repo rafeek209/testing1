@@ -3,9 +3,7 @@ pipeline {
     stages {
         stage('clone') {
             steps {
-                #!/bin/bash
-                chmod +x hello.sh
-                ./Jenkinsfile
+    
             }
         }
         stage('build') {
@@ -14,7 +12,10 @@ pipeline {
               image 'node:18-apline'
           }
             steps {
-                //
+                withCredentials([usernamePassword(credentialsId: 'jenac', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]
+                                                  sh '''
+                                                  docker login -u USERNAME -p PASSWORD
+                                                  '''
             }
         }
         stage('run') {
