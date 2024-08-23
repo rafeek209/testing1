@@ -30,7 +30,7 @@ pipeline {
         stage('Run Nginx Container') {
             steps {
                 sh '''
-                    docker run -it --rm -d -p 8080:80 --name web nginx
+                docker run -it --rm -d -p 8081:80 --name web nginx
                 '''
             }
         }
