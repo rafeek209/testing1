@@ -13,14 +13,12 @@ pipeline {
 
         stage('Node Version and File Creation') {
             agent {
-                docker {
-                    image 'node:18'
-                }
+        docker { image 'node:20.17.0-alpine3.20' }
             }
             steps {
                 script {
                     sh '''
-                    node -v
+                    node --version
                     echo "Rafeek Zakaria" > /workspace/myname.txt
                     archiveArtifacts artifacts: 'myname.txt'
                     '''
