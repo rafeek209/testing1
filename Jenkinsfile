@@ -39,8 +39,9 @@ pipeline {
     post {
         always {
             sh '''
-                docker stop web || true
-                docker rm web || true
+            cat myname.txt
+            docker stop web || true
+            docker rm web || true
             '''
         }
     }
