@@ -1,31 +1,30 @@
 pipeline {
     agent any
     stages {
-        stage('DockerHub Login') {
+         stage('Login and Deploy') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    script {
-                        sh '''
-                        export PATH=$PATH:/usr/bin
-                        docker --version
-                        echo $PASSWORD | docker login -u $USERNAME --password-stdin
-                        '''
-                    }
+                withCredentials([usernamePassword(credentialsId: 'my-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh '''
+                        echo "Logging in with user: $USERNAME"
+                        curl -u $USERNAME:$PASSWORD https://example.com/login
+                    '''
                 }
             }
         }
 
-        stage('Node Version and File Creation') {
-            steps {
-                script {
-                    docker.image('node:20.17.0-alpine3.20').inside('-v /workspace:/workspace') {
-                        sh '''
-                        node --version
-                        echo "Rafeek Zakaria" > /workspace/myname.txt
-                        '''
-                        archiveArtifacts artifacts: 'myname.txt'
-                    }
+        stage('Build') {
+      
+            agent {
+                docker {
+                    image 'node:18-alpine'
                 }
+            }
+            steps {
+                sh '''
+                    echo "With docker"
+                    ls -la
+                    touch container-yes.txt
+                '''
             }
         }
     }
