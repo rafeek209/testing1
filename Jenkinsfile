@@ -3,13 +3,14 @@ pipeline {
     stages {
         stage('clone') {
             steps {
-    
+                //
             }
         }
-        stage('build') {
+        stage('hub login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'jenac', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]
-                                                  sh 'docker login -u USERNAME -p PASSWORD'
+                withCredentials([usernamePassword(credentialsId: 'jenac', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'docker login -u $USERNAME -p $PASSWORD'
+                }
             }
         }
         stage('run') {
