@@ -3,7 +3,8 @@ pipeline {
     stages {
         stage('clone') {
             steps {
-                //
+                echo 'Cloning repository...'
+                // Add your steps here
             }
         }
         stage('hub login') {
@@ -15,7 +16,8 @@ pipeline {
         }
         stage('run') {
             steps {
-                //
+                echo 'Running the application...'
+                // Add your steps here
             }
         }
     }
