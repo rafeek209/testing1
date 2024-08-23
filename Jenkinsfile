@@ -24,6 +24,7 @@ pipeline {
                     node --version
                     echo "Rafeek Zakaria" > myname.txt
                 '''
+                stash name: 'myname-file', includes: 'myname.txt'
             }
         }
 
@@ -38,7 +39,9 @@ pipeline {
 
     post {
         always {
+            unstash 'myname-file'
             sh '''
+            cat myname.txt
             docker stop web
             docker rm web
             '''
