@@ -13,7 +13,7 @@ pipeline {
 
         stage('Node Version and File Creation') {
             agent {
-        docker { image 'node:20.17.0-alpine3.20' }
+                docker { image 'node:20.17.0-alpine3.20' }
             }
             steps {
                 script {
