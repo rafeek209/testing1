@@ -37,14 +37,19 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            unstash 'myname-file'
-            sh '''
-            cat myname.txt
-            docker stop web
-            docker rm web
-            '''
-        }
+    ppost {
+    always {
+        unstash 'myname-file'
+        sh '''
+        cat myname.txt || echo "File myname.txt not found"
+        if [ "$(docker ps -q -f name=web)" ]; then
+            docker stop web || true
+            docker rm web || true
+        else
+            echo "No container named 'web' exists"
+        fi
+        '''
     }
+}
+
 }
