@@ -1,27 +1,10 @@
 pipeline {
     agent any
     stages {
-        stage('DockerHub Login') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    script {
-                        sh 'docker --version' // Verify Docker is available
-                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                    }
-                }
-            }
-        }
-
-        stage('Node Version and File Creation') {
+        stage('Print PATH') {
             steps {
                 script {
-                    docker.image('node:20.17.0-alpine3.20').inside('-v /workspace:/workspace') {
-                        sh '''
-                        node --version
-                        echo "Rafeek Zakaria" > /workspace/myname.txt
-                        '''
-                        archiveArtifacts artifacts: 'myname.txt'
-                    }
+                    sh 'echo $PATH'
                 }
             }
         }
