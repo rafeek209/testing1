@@ -1,7 +1,7 @@
 pipeline {
     agent any
-        stages {
-         stage('Login and Deploy') {
+    stages {
+        stage('Login and Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jenac', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
@@ -11,18 +11,19 @@ pipeline {
                 }
             }
         }
-        stage('file creation and version') {
-    agent {
-        docker {
-            image 'node:14'
+        stage('File Creation and Version') {
+            agent {
+                docker {
+                    image 'node:14'
+                    label 'docker'
+                }
+            }
+            steps {
+                sh 'node --version'
+                sh 'echo "Rafeek Zakaria" > Raff.txt'
+            }
         }
-    }
-    steps {
-        sh 'node --version'
-        sh 'echo "Rafeek Zakaria" > Raff.txt'
-    }
-}
-        stage('run') {
+        stage('Run') {
             steps {
                 echo 'Running the application...'
             }
