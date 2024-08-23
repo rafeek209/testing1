@@ -31,25 +31,20 @@ pipeline {
         stage('Run Nginx Container') {
             steps {
                 sh '''
-                docker run -it --rm -d -p 8081:80 --name web nginx
+                docker run -it --rm -d -p 8081:80 --name tryy nginx
                 '''
             }
         }
     }
 
-    post {
+post {
     always {
         unstash 'myname-file'
         sh '''
-        cat myname.txt || echo "File myname.txt not found"
-        if [ "$(docker ps -q -f name=web)" ]; then
-            docker stop web || true
-            docker rm web || true
-        else
-            echo "No container named 'web' exists"
-        fi
+        cat myname.txt
+        docker stop tryy || true
+        docker rm tryy || true
         '''
+        }
     }
-}
-
 }
