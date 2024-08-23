@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-         stage('Login and Deploy') {
+        stage('Login and Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'my-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
@@ -13,7 +13,6 @@ pipeline {
         }
 
         stage('Build') {
-      
             agent {
                 docker {
                     image 'node:18-alpine'
