@@ -11,22 +11,5 @@ pipeline {
                 }
             }
         }
-        stage('File Creation and Version') {
-            agent {
-                docker {
-                    image 'node:14'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'  // Optional: if Docker-in-Docker is needed
-                }
-            }
-            steps {
-                sh 'node --version'
-                sh 'echo "Rafeek Zakaria" > Raff.txt'
-            }
-        }
-        stage('Run') {
-            steps {
-                echo 'Running the application...'
-            }
-        }
     }
 }
