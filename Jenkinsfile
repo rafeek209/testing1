@@ -37,7 +37,7 @@ pipeline {
         }
     }
 
-    ppost {
+    post {
     always {
         unstash 'myname-file'
         sh '''
