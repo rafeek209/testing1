@@ -11,7 +11,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Node Version and File Creation') {
             agent {
                 docker {
@@ -23,8 +23,25 @@ pipeline {
                     echo "Node.js version:"
                     node --version
                     echo "Rafeek Zakaria" > myname.txt
-                    '''
+                '''
             }
+        }
+
+        stage('Run Nginx Container') {
+            steps {
+                sh '''
+                    docker run -it --rm -d -p 8080:80 --name web nginx
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            sh '''
+                docker stop web || true
+                docker rm web || true
+            '''
         }
     }
 }
