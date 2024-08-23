@@ -7,7 +7,7 @@ pipeline {
         stage('DockerHub Login') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                    docker.withRegistry('https://index.docker.io/v1/', dockerpass) {
                         echo 'Logged into DockerHub successfully'
                     }
                 }
