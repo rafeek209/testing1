@@ -23,8 +23,10 @@ pipeline {
                     echo "Node.js version:"
                     node --version
                     echo "Rafeek Zakaria" > /myname.txt
+                    ls -l /myname.txt
                 '''
-                archiveArtifacts artifacts: '/myname.txt'
+                // Ensure the file is archived correctly
+                archiveArtifacts artifacts: 'myname.txt', allowEmptyArchive: true
             }
         }
         
