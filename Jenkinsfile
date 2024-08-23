@@ -1,11 +1,5 @@
 pipeline {
     agent any
-    stages {
-        stage('clone') {
-            steps {
-                echo 'Cloning repository...'
-            }
-        }
          stage('Login and Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jenac', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -16,6 +10,18 @@ pipeline {
                 }
             }
         }
+    stages {
+        stage('file creation and version') {
+    agent {
+        docker {
+            image 'node:14'
+        }
+    }
+    steps {
+        sh 'node --version'
+        sh 'echo "Rafeek Zakaria" > Raff.txt'
+    }
+}
         stage('run') {
             steps {
                 echo 'Running the application...'
