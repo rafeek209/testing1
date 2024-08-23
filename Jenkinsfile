@@ -16,13 +16,14 @@ pipeline {
             agent {
                 docker {
                     image 'node:alpine'
+                    args '-v $WORKSPACE:/workspace'
                 }
             }
             steps {
                 sh '''
                     echo "Node.js version:"
                     node --version
-                    echo "Rafeek Zakaria" > myname.txt
+                    echo "Rafeek Zakaria" > /workspace/myname.txt
                 '''
             }
         }
@@ -39,7 +40,7 @@ pipeline {
     post {
         always {
             sh '''
-            cat myname.txt
+            cat myname.txt || true
             docker stop web || true
             docker rm web || true
             '''
