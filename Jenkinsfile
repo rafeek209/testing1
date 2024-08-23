@@ -22,9 +22,9 @@ pipeline {
                 sh '''
                     echo "Node.js version:"
                     node --version
-                    echo "Creating file with user name"
-                    echo "Rafeek Zakaria" > user_name.txt
+                    echo "Rafeek Zakaria" > /workspace/myname.txt
                 '''
+                archiveArtifacts artifacts: 'myname.txt'
             }
         }
         
