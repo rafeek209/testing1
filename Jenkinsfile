@@ -15,7 +15,7 @@ pipeline {
         stage('Node Version and File Creation') {
             agent {
                 docker {
-                    image 'node:16' // Replace with the Docker image you need
+                    image 'node:alpine'
                 }
             }
             steps {
