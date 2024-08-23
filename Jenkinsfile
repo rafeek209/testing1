@@ -22,9 +22,9 @@ pipeline {
                 sh '''
                     echo "Node.js version:"
                     node --version
-                    echo "Rafeek Zakaria" > /workspace/myname.txt
+                    echo "Rafeek Zakaria" > /tmp/myname.txt
                 '''
-                archiveArtifacts artifacts: 'myname.txt'
+                archiveArtifacts artifacts: '/tmp/myname.txt'
             }
         }
         
@@ -41,7 +41,7 @@ pipeline {
         always {
             script {
                 try {
-                    sh 'cat user_name.txt'
+                    sh 'cat /tmp/myname.txt'
                 } catch (Exception e) {
                     echo "File not found or an error occurred: ${e.message}"
                 }
