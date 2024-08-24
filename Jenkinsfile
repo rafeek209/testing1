@@ -45,6 +45,7 @@ post {
         docker stop tryy || true
         docker rm tryy || true
         '''
+        echo "Running ${env.BUILD_ID}"
         }
     }
 }
