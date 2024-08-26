@@ -35,12 +35,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            sh '''
-                cat ahmed.txt
-            '''
-        }
-    }
 }
