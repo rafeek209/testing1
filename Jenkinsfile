@@ -27,14 +27,10 @@ pipeline {
             }
         }
 
-        stage('Deploy Nginx Alpine Container') {
+        stage('Run Nginx Container') {
             steps {
-                sh 'docker pull nginx:alpine'
                 sh '''
-                    docker run -d \
-                    --name my-nginx-alpine \
-                    -p 5000:80 \
-                    nginx:alpine
+                docker run -it --rm -d -p 5000:80 --name my-nginx-alpine nginx
                 '''
             }
         }
@@ -43,8 +39,6 @@ pipeline {
     post {
         always {
             sh '''
-                docker stop my-nginx-alpine
-                docker rm my-nginx-alpine 
                 cat ahmed.txt
             '''
         }
