@@ -27,18 +27,14 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    args '-v /tmp:/tmp'
-                }
-            }
+        stage('Deploy Nginx Alpine Container') {
             steps {
+                sh 'docker pull nginx:alpine'
                 sh '''
-                    echo "With docker"
-                    echo "Ahmed shabaan" >ahmed.txt
-                    node --version
+                    docker run -d \
+                    --name my-nginx-alpine \
+                    -p 5000:80 \
+                    nginx:alpine
                 '''
             }
         }
