@@ -2,34 +2,40 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Login and Deploy') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerpass', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
-                        echo $DOCKER_PASS | docker login -u rafeek123 --password-stdin
+                        echo "Logging in with user: $USERNAME"
+                        curl -u $USERNAME:$PASSWORD
                     '''
                 }
             }
         }
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'node:alpine'
+                }
+            }
             steps {
                 sh '''
-                    # Your build commands here
+                    echo "With docker"
+                    echo "Ahmed shabaan" >ahmed.txt
+                    node --version
                 '''
             }
         }
 
-        stage('Run Nginx Container') {
+        stage('Deploy Nginx Alpine Container') {
             steps {
-                sh '''
-                    docker run --name nginx-container -d nginx
+                sh 'docker pull nginx:alpine'
+                                sh '''
+                    docker run -d \
+                    --name my-nginx-alpine \
+                    -p 5000:80 \
+                    nginx:alpine
                 '''
             }
         }
@@ -37,8 +43,11 @@ pipeline {
 
     post {
         always {
-            echo "Cleaning up..."
-            sh 'docker rm -f nginx-container || true'
+            sh '''
+                docker stop my-nginx-alpine
+                docker rm my-nginx-alpine 
+                cat ahmed.txt
+            '''
         }
     }
 }
