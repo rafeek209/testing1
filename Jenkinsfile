@@ -1,18 +1,19 @@
 pipeline {
     agent any
+
     stages {
-        stage('DockerHub Login') {
+        stage('Login and Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerpass', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
-                        echo "Logging in to DockerHub with user: $USERNAME"
-                        echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
+                        echo "Logging in with user: $USERNAME"
+                        echo $PASSWORD | docker login -u "$USERNAME" --password-stdin
                     '''
                 }
             }
         }
 
-        stage('Node Version and File Creation') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:alpine'
@@ -20,32 +21,36 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo "Node.js version:"
+                    echo "With docker"
+                    echo "Ahmed shabaan" >ahmed.txt
                     node --version
-                    echo "Rafeek Zakaria" > myname.txt
+                    stash name: 'myname-file', includes: 'ahmed.txt'
+
                 '''
-                stash name: 'myname-file', includes: 'myname.txt'
             }
         }
 
-        stage('Run Nginx Container') {
+        stage('Deploy Nginx Alpine Container') {
             steps {
-                sh '''
-                docker run -it --rm -d -p 8081:80 --name tryy nginx
+                sh 'docker pull nginx:alpine'
+                                sh '''
+                    docker run -d \
+                    --name my-nginx-alpine \
+                    -p 6000:80 \
+                    nginx:alpine
                 '''
             }
         }
     }
 
-post {
-    always {
-        unstash 'myname-file'
-        sh '''
-        cat myname.txt
-        docker stop tryy || true
-        docker rm tryy || true
-        '''
-        echo "Running ${env.BUILD_ID}"
+    post {
+        always {
+            sh '''
+                docker stop my-nginx-alpine
+                docker rm my-nginx-alpine 
+                unstash 'myname-file'
+                cat ahmed.txt
+            '''
         }
     }
 }
