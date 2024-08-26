@@ -7,7 +7,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'dockerpass', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh '''
                         echo "Logging in with user: $USERNAME"
-                        curl -u $USERNAME:$PASSWORD
+                        docker login -u "$USERNAME" --password-stdin
                     '''
                 }
             }
