@@ -7,7 +7,7 @@ pipeline {
         IMAGE_TAG = 'latest'
         CONTAINER_NAME = 'virtcon'
         SLACK_CHANNEL = '#testing'
-        SLACK_CREDENTIALS_ID = 'slackpass'
+        SLACK_CREDENTIALS_ID = 'slackcon'
     }
 
     stages {
