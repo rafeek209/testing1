@@ -16,6 +16,7 @@ pipeline {
             agent {
                 docker {
                     image 'node:alpine'
+                    reuseNode true
                 }
             }
             steps {
@@ -24,7 +25,6 @@ pipeline {
                     node --version
                     echo "Rafeek Zakaria" > myname.txt
                 '''
-                stash name: 'myname-file', includes: 'myname.txt'
             }
         }
 
@@ -39,7 +39,6 @@ pipeline {
 
 post {
     always {
-        unstash 'myname-file'
         sh '''
         cat myname.txt
         docker stop tryy || true
