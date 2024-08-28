@@ -6,7 +6,7 @@ pipeline {
         IMAGE_NAME = 'virt'
         IMAGE_TAG = 'latest'
         CONTAINER_NAME = 'virtcon'
-        SLACK_CHANNEL = '#testing'
+        SLACK_CHANNEL = 'tessting'
         SLACK_CREDENTIALS_ID = 'slackcon'
     }
 
