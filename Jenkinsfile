@@ -1,50 +1,41 @@
 pipeline {
     agent any
+    
     stages {
-        stage('DockerHub Login') {
+        stage('Build') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerpass', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh '''
-                        echo "Logging in to DockerHub with user: $USERNAME"
-                        echo "$PASSWORD" | docker login -u "$USERNAME" --password-stdin
-                    '''
+                script {
+                    docker.build('dockery:latest')
                 }
             }
         }
-
-        stage('Node Version and File Creation') {
-            agent {
-                docker {
-                    image 'node:alpine'
-                    reuseNode true
+        
+        stage('Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerpass') {
+                        docker.image('dockery:latest').push('latest')
+                    }
+                    
+                    sh 'docker rmi dockery:latest'
                 }
             }
-            steps {
-                sh '''
-                    echo "Node.js version:"
-                    node --version
-                    echo "Rafeek Zakaria" > myname.txt
-                '''
-            }
         }
-
-        stage('Run Nginx Container') {
+        
+        stage('Deploy') {
             steps {
-                sh '''
-                docker run -it --rm -d -p 8081:80 --name tryy nginx
-                '''
+                script {
+                    docker.image('dockery:latest').pull()
+                    
+                    docker.run('dockery:latest', '-p 80:80')
+                }
             }
         }
     }
-
-post {
-    always {
-        sh '''
-        cat myname.txt
-        docker stop tryy || true
-        docker rm tryy || true
-        '''
-        echo "Running ${env.BUILD_ID}"
+    
+    post {
+        always {
+            slackSend channel: '#testing', message: "Build ${env.BUILD_NUMBER}: ${currentBuild.currentResult}"
         }
     }
 }
