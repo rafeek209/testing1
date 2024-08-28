@@ -5,6 +5,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'dockerpass'
         IMAGE_NAME = 'rafeek123/virt'
         IMAGE_TAG = 'latest'
+        CONTAINER_NAME = 'virt-container'
     }
 
     stages {
@@ -26,12 +27,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh "docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker run -d --name ${CONTAINER_NAME} -p 80:80 ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
     }
 
     post {
         always {
             script {
                 sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true"
+                sh "docker stop ${CONTAINER_NAME} || true"
+                sh "docker rm ${CONTAINER_NAME} || true"
             }
         }
     }
